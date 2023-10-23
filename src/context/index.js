@@ -1,9 +1,11 @@
 'use client';
 
-import { createContext } from 'react';
+import { createContext, useState } from 'react';
 
 export const GlobalContext = createContext(null);
 
 export default function GlobalState({ children }) {
-  return <GlobalContext.Provider value={{}}>{children}</GlobalContext.Provider>;
+  const [showNavModal, setShowNavModal] = useState(false);
+
+  return <GlobalContext.Provider value={{ showNavModal, setShowNavModal }}>{children}</GlobalContext.Provider>;
 }
