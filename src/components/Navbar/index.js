@@ -4,16 +4,14 @@ import { GlobalContext } from '@/context';
 import { adminNavOptions, navOptions } from '../../utils/index';
 import { Fragment, useContext } from 'react';
 import CommonModal from '../CommonModal';
+import Cookies from 'js-cookie';
+import { usePathname, useRouter } from 'next/navigation';
 
 export const stylesCss = {
   buttonCss: `mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer`,
 };
 
 const isAdminView = false;
-const isAuthUser = true;
-const user = {
-  role: 'admin',
-};
 
 function NavItems({ isModalView = false }) {
   return (
@@ -44,6 +42,20 @@ function NavItems({ isModalView = false }) {
 
 export default function Navbar() {
   const { showNavModal, setShowNavModal } = useContext(GlobalContext);
+  const { user, isAuthUser, setIsAuthUser, setUser } = useContext(GlobalContext);
+
+  const pathName = usePathname();
+  const router = useRouter();
+
+  console.log(pathName);
+
+  function handleLogout() {
+    setIsAuthUser(false);
+    setUser(null);
+    Cookies.remove('token');
+    localStorage.clear();
+    router.push('/');
+  }
   return (
     <>
       <nav className='bg-white fixed w-full z-20 top-0 left-0 border-b border-gray-200'>
@@ -54,21 +66,42 @@ export default function Navbar() {
           <div className=' flex md:order-2 gap-2'>
             {!isAdminView && isAuthUser ? (
               <Fragment>
-                <button className={stylesCss.buttonCss}>Account</button>
-                <button className={stylesCss.buttonCss}>Cart</button>
+                <button className='mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer'>
+                  Account
+                </button>
+                <button className='mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer'>
+                  Cart
+                </button>
               </Fragment>
             ) : null}
-            {user.role === 'admin' ? (
+            {user?.role === 'admin' ? (
               isAdminView ? (
-                <button className={stylesCss.buttonCss}>Client View</button>
+                <button className='mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer'>
+                  Client View
+                </button>
               ) : (
-                <button className={stylesCss.buttonCss}>Admin View</button>
+                <button
+                  onClick={() => router.push('/admin-view')}
+                  className='mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer'
+                >
+                  Admin View
+                </button>
               )
             ) : null}
             {isAuthUser ? (
-              <button className={stylesCss.buttonCss}>Logout</button>
+              <button
+                onClick={handleLogout}
+                className='mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer'
+              >
+                Logout
+              </button>
             ) : (
-              <button className={stylesCss.buttonCss}>Login</button>
+              <button
+                onClick={() => router.push('/login')}
+                className='mt-2 inline-block bg-black px-5 py-3 text-xs font-medium uppercase tracking-wide text-white hover:bg-indigo-400 transition-all ease-in duration-300 cursor-pointer'
+              >
+                Login
+              </button>
             )}
             <button
               data-collapse-toggle='navbar-sticky'
@@ -87,9 +120,9 @@ export default function Navbar() {
                 xmlns='http://www.w3.org/2000/svg'
               >
                 <path
-                  fill-rule='evenodd'
+                  fillRule='evenodd'
                   d='M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z'
-                  clip-rule='evenodd'
+                  clipRule='evenodd'
                 ></path>
               </svg>
             </button>

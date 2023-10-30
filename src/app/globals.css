@@ -34,3 +34,13 @@ body::-webkit-scrollbar-thumb {
   background-color: darkgrey;
   outline: 1px solid slategrey;
 }
+
+p,
+input,
+h1,
+h2,
+h3,
+h4,
+h5 {
+  color: black;
+}
